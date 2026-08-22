@@ -17,7 +17,7 @@ export default function Navbar() {
             width: 30, height: 30, borderRadius: 8, display: 'grid', placeItems: 'center',
             background: 'linear-gradient(135deg, var(--sunset), var(--gold))', fontSize: 16,
           }}>🧭</span>
-          <span style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 18 }}>GlobeTrotter</span>
+          <span style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 18, color: '#f5f0e8' }}>GlobeTrotter</span>
         </Link>
 
         {user && (
