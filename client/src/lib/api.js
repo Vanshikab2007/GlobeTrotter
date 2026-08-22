@@ -59,6 +59,7 @@ export const api = {
   searchCities: (q) => request(`/cities${q ? `?q=${encodeURIComponent(q)}` : ''}`),
   cityActivities: (cityId) => request(`/cities/${cityId}/activities`),
 
+  getPublicTrips: () => request('/public'),
   getPublicTrip: (slug) => request(`/public/${slug}`),
   copySharedTrip: (token, slug) => request(`/public/${slug}/copy`, { method: 'POST', token }),
 };

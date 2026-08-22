@@ -24,6 +24,7 @@ export default function Navbar() {
           <nav style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
             <Link className="btn-ghost btn" to="/" style={{ padding: '8px 12px' }}>Dashboard</Link>
             <Link className="btn-ghost btn" to="/trips/new" style={{ padding: '8px 12px' }}>New Trip</Link>
+            <Link className="btn-ghost btn" to="/community" style={{ padding: '8px 12px' }}>Community</Link>
             <Link className="btn-ghost btn" to="/admin" style={{ padding: '8px 12px' }}>Admin</Link>
             <span style={{ width: 1, height: 22, background: 'var(--line)', margin: '0 6px' }} />
             

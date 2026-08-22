@@ -116,6 +116,28 @@ export default function TripDetail() {
     }
   }
 
+  async function handleReorderStops(startIndex, endIndex) {
+    const sorted = [...trip.stops].sort((a,b) => a.order_index - b.order_index || new Date(a.start_date) - new Date(b.start_date));
+    const [removed] = sorted.splice(startIndex, 1);
+    sorted.splice(endIndex, 0, removed);
+    
+    setBusy(true);
+    try {
+      let latestTrip = trip;
+      for (let i = 0; i < sorted.length; i++) {
+        if (sorted[i].order_index !== i) {
+          const res = await api.updateStop(token, id, sorted[i].id, { order_index: i });
+          latestTrip = res.trip;
+        }
+      }
+      setTrip(latestTrip);
+    } catch(e) {
+      alert(e.message);
+    } finally {
+      setBusy(false);
+    }
+  }
+
   if (error) {
     return <div className="container" style={{ paddingTop: 60 }}><p className="error-text">{error}</p></div>;
   }
@@ -180,7 +202,7 @@ export default function TripDetail() {
             onAddStopClick={() => setShowCityModal(true)}
             onDeleteStop={handleDeleteStop}
             onEditStop={(s) => setEditStop(s)}
-            onMoveStop={handleMoveStop}
+            onReorderStops={handleReorderStops}
             onAddActivityClick={(stop) => setActivityModalStop(stop)}
             onDeleteActivity={handleDeleteActivity}
             onEditActivity={(stop, act) => setEditActivity({ stop, act })}
@@ -215,9 +237,39 @@ export default function TripDetail() {
   );
 }
 
-function BuildPanel({ trip, onAddStopClick, onDeleteStop, onEditStop, onMoveStop, onAddActivityClick, onDeleteActivity, onEditActivity }) {
+function BuildPanel({ trip, onAddStopClick, onDeleteStop, onEditStop, onReorderStops, onAddActivityClick, onDeleteActivity, onEditActivity }) {
   const sortedStops = [...trip.stops].sort((a,b) => a.order_index - b.order_index || new Date(a.start_date) - new Date(b.start_date));
   
+  const [draggedStopIdx, setDraggedStopIdx] = useState(null);
+  const [dragOverIdx, setDragOverIdx] = useState(null);
+
+  const handleDragStart = (e, index) => {
+    setDraggedStopIdx(index);
+    e.dataTransfer.effectAllowed = 'move';
+    e.currentTarget.style.opacity = '0.4';
+  };
+
+  const handleDragEnd = (e) => {
+    e.currentTarget.style.opacity = '1';
+    setDraggedStopIdx(null);
+    setDragOverIdx(null);
+  };
+
+  const handleDragOver = (e, index) => {
+    e.preventDefault();
+    if (dragOverIdx !== index) {
+      setDragOverIdx(index);
+    }
+  };
+
+  const handleDrop = (e, index) => {
+    e.preventDefault();
+    if (draggedStopIdx !== null && draggedStopIdx !== index) {
+      onReorderStops(draggedStopIdx, index);
+    }
+    setDragOverIdx(null);
+  };
+
   return (
     <div>
       {trip.stops.length === 0 && (
@@ -229,24 +281,40 @@ function BuildPanel({ trip, onAddStopClick, onDeleteStop, onEditStop, onMoveStop
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
         {sortedStops.map((stop, i) => (
-          <div key={stop.id} className="card" style={{ padding: 20 }}>
+          <div 
+            key={stop.id} 
+            className="card" 
+            style={{ 
+              padding: 20, 
+              cursor: 'grab',
+              border: dragOverIdx === i ? '2px dashed var(--sunset)' : '1px solid var(--line)',
+              transform: dragOverIdx === i ? 'scale(1.02)' : 'scale(1)',
+              transition: 'all 0.2s ease'
+            }}
+            draggable
+            onDragStart={(e) => handleDragStart(e, i)}
+            onDragEnd={handleDragEnd}
+            onDragOver={(e) => handleDragOver(e, i)}
+            onDrop={(e) => handleDrop(e, i)}
+          >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-              <div>
-                <span className="badge" style={{ background: 'var(--sunset-dim)', color: 'var(--sunset)', marginBottom: 8 }}>
-                  Stop {i + 1}
-                </span>
-                <h3 style={{ fontSize: 18 }}>{stop.city_name}{stop.country ? `, ${stop.country}` : ''}</h3>
-                <p style={{ color: 'var(--muted)', fontSize: 13, marginTop: 4 }}>{fmt(stop.start_date)} → {fmt(stop.end_date)}</p>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                <div style={{ cursor: 'grab', color: 'var(--muted)', fontSize: 24, padding: '0 8px' }}>⋮⋮</div>
+                <div>
+                  <span className="badge" style={{ background: 'var(--sunset-dim)', color: 'var(--sunset)', marginBottom: 8 }}>
+                    Stop {i + 1}
+                  </span>
+                  <h3 style={{ fontSize: 18 }}>{stop.city_name}{stop.country ? `, ${stop.country}` : ''}</h3>
+                  <p style={{ color: 'var(--muted)', fontSize: 13, marginTop: 4 }}>{fmt(stop.start_date)} → {fmt(stop.end_date)}</p>
+                </div>
               </div>
               <div style={{ display: 'flex', gap: 6 }}>
-                {i > 0 && <button className="btn-ghost btn" onClick={() => onMoveStop(stop.id, -1)}>↑</button>}
-                {i < sortedStops.length - 1 && <button className="btn-ghost btn" onClick={() => onMoveStop(stop.id, 1)}>↓</button>}
                 <button className="btn-ghost btn" onClick={() => onEditStop(stop)}>Edit</button>
                 <button className="btn-ghost btn" onClick={() => onDeleteStop(stop.id)}>✕</button>
               </div>
             </div>
 
-            <div style={{ marginTop: 16, display: 'flex', flexDirection: 'column', gap: 8 }}>
+            <div style={{ marginTop: 16, display: 'flex', flexDirection: 'column', gap: 8, paddingLeft: 44 }}>
               {stop.activities.map((a) => (
                 <div key={a.id} style={{
                   display: 'flex', justifyContent: 'space-between', alignItems: 'center',
@@ -270,7 +338,7 @@ function BuildPanel({ trip, onAddStopClick, onDeleteStop, onEditStop, onMoveStop
               )}
             </div>
 
-            <button className="btn btn-secondary" style={{ marginTop: 14 }} onClick={() => onAddActivityClick(stop)}>
+            <button className="btn btn-secondary" style={{ marginTop: 14, marginLeft: 44 }} onClick={() => onAddActivityClick(stop)}>
               + Add activity
             </button>
           </div>
