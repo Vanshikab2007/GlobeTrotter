@@ -1,5 +1,7 @@
 import { Router } from 'express';
 import crypto from 'crypto';
+import fs from 'fs';
+import path from 'path';
 import db from '../db.js';
 import { requireAuth } from '../middleware/auth.js';
 
@@ -115,6 +117,38 @@ router.put('/:id', requireAuth, (req, res) => {
   db.prepare(`UPDATE trips SET name = ?, start_date = ?, end_date = ?, description = ?, cover_photo = ? WHERE id = ?`)
     .run(name ?? trip.name, start_date ?? trip.start_date, end_date ?? trip.end_date,
          description ?? trip.description, cover_photo ?? trip.cover_photo, trip.id);
+  res.json({ trip: getTripWithDetail(trip.id) });
+});
+
+// POST /api/trips/:id/cover - upload cover photo (base64)
+router.post('/:id/cover', requireAuth, (req, res) => {
+  const trip = db.prepare('SELECT * FROM trips WHERE id = ?').get(req.params.id);
+  if (!trip || trip.user_id !== req.user.id) return res.status(404).json({ error: 'Trip not found' });
+  const { image } = req.body || {};
+  if (!image) return res.status(400).json({ error: 'Image data is required' });
+
+  // image format should be: data:image/png;base64,....
+  const matches = image.match(/^data:image\/([A-Za-z-+\/]+);base64,(.+)$/);
+  if (!matches || matches.length !== 3) {
+    return res.status(400).json({ error: 'Invalid image format' });
+  }
+
+  const extension = matches[1] === 'jpeg' ? 'jpg' : matches[1];
+  const buffer = Buffer.from(matches[2], 'base64');
+  
+  // ensure directory exists
+  const dirPath = path.join(process.cwd(), '../client/public/images/trips');
+  if (!fs.existsSync(dirPath)) {
+    fs.mkdirSync(dirPath, { recursive: true });
+  }
+
+  const fileName = `trip_${trip.id}.${extension}`;
+  const filePath = path.join(dirPath, fileName);
+  fs.writeFileSync(filePath, buffer);
+
+  const dbPath = `/images/trips/${fileName}`;
+  db.prepare('UPDATE trips SET cover_photo = ? WHERE id = ?').run(dbPath, trip.id);
+
   res.json({ trip: getTripWithDetail(trip.id) });
 });
 

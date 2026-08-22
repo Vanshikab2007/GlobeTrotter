@@ -36,6 +36,7 @@ export const api = {
   getTrip: (token, id) => request(`/trips/${id}`, { token }),
   updateTrip: (token, id, payload) => request(`/trips/${id}`, { method: 'PUT', body: payload, token }),
   deleteTrip: (token, id) => request(`/trips/${id}`, { method: 'DELETE', token }),
+  uploadTripCover: (token, id, base64Image) => request(`/trips/${id}/cover`, { method: 'POST', body: { image: base64Image }, token }),
   getBudget: (token, id) => request(`/trips/${id}/budget`, { token }),
   shareTrip: (token, id) => request(`/trips/${id}/share`, { method: 'POST', token }),
 
@@ -51,6 +52,8 @@ export const api = {
     request(`/trips/${tripId}/stops/${stopId}/activities/${activityId}`, { method: 'PUT', body: payload, token }),
   deleteActivity: (token, tripId, stopId, activityId) =>
     request(`/trips/${tripId}/stops/${stopId}/activities/${activityId}`, { method: 'DELETE', token }),
+
+  getAdminStats: (token) => request('/admin/stats', { token }),
 
   searchCities: (q) => request(`/cities${q ? `?q=${encodeURIComponent(q)}` : ''}`),
   cityActivities: (cityId) => request(`/cities/${cityId}/activities`),

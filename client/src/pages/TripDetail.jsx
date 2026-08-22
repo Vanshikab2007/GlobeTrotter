@@ -7,6 +7,7 @@ import ActivitySearchModal from '../components/ActivitySearchModal';
 import BudgetPanel from '../components/BudgetPanel';
 import CalendarPanel from '../components/CalendarPanel';
 import Modal from '../components/Modal';
+import DropInImage from '../components/DropInImage';
 
 const TABS = ['Build', 'Itinerary', 'Budget', 'Calendar'];
 
@@ -124,6 +125,15 @@ export default function TripDetail() {
 
   return (
     <div className="container" style={{ paddingTop: 36, paddingBottom: 64 }}>
+      <div style={{ marginBottom: 24, borderRadius: 12, overflow: 'hidden' }}>
+        <DropInImage 
+          folder="trips" 
+          name={trip.name} 
+          coverOverride={trip.cover_photo}
+          style={{ width: '100%', height: 200, objectFit: 'cover', display: 'block' }}
+        />
+      </div>
+
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 16, marginBottom: 8 }}>
         <div>
           <h1 style={{ fontSize: 28 }}>{trip.name}</h1>
@@ -132,6 +142,7 @@ export default function TripDetail() {
           </p>
         </div>
         <div style={{ display: 'flex', gap: 10 }}>
+          <CoverUploadButton tripId={trip.id} token={token} onUploaded={(t) => setTrip(t)} />
           <button className="btn btn-secondary" onClick={() => setEditTripOpen(true)}>Edit</button>
           <button className="btn btn-secondary" onClick={handleShare}>Share trip</button>
           <button className="btn btn-danger" onClick={handleDeleteTrip}>Delete</button>
@@ -452,5 +463,52 @@ function EditActivityModal({ tripId, stop, activity, token, onClose, onSaved }) 
         <button type="submit" className="btn btn-primary" style={{ width: '100%', marginTop: 8 }}>Save Activity</button>
       </form>
     </Modal>
+  );
+}
+
+function CoverUploadButton({ tripId, token, onUploaded }) {
+  const [busy, setBusy] = useState(false);
+
+  function handleFile(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    setBusy(true);
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const img = new Image();
+      img.onload = async () => {
+        const canvas = document.createElement('canvas');
+        const MAX_WIDTH = 1200;
+        let scaleSize = 1;
+        if (img.width > MAX_WIDTH) {
+          scaleSize = MAX_WIDTH / img.width;
+        }
+        canvas.width = img.width * scaleSize;
+        canvas.height = img.height * scaleSize;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
+        
+        try {
+          const res = await api.uploadTripCover(token, tripId, dataUrl);
+          onUploaded(res.trip);
+        } catch (err) {
+          alert(err.message);
+        } finally {
+          setBusy(false);
+          e.target.value = ''; // reset input
+        }
+      };
+      img.src = event.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  return (
+    <label className="btn btn-secondary" style={{ cursor: 'pointer', opacity: busy ? 0.7 : 1 }}>
+      {busy ? 'Uploading...' : 'Upload cover'}
+      <input type="file" accept="image/*" style={{ display: 'none' }} onChange={handleFile} disabled={busy} />
+    </label>
   );
 }

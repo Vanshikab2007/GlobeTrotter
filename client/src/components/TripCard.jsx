@@ -15,6 +15,7 @@ export default function TripCard({ trip }) {
       <DropInImage 
         folder="trips" 
         name={trip.name} 
+        coverOverride={trip.cover_photo}
         style={{ width: '100%', height: 120, objectFit: 'cover' }}
         fallbackStyle={{ width: '100%', height: 80 }} 
       />
