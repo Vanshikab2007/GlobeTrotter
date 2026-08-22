@@ -45,6 +45,8 @@ export const api = {
 
   addActivity: (token, tripId, stopId, payload) =>
     request(`/trips/${tripId}/stops/${stopId}/activities`, { method: 'POST', body: payload, token }),
+  updateActivity: (token, tripId, stopId, activityId, payload) =>
+    request(`/trips/${tripId}/stops/${stopId}/activities/${activityId}`, { method: 'PUT', body: payload, token }),
   deleteActivity: (token, tripId, stopId, activityId) =>
     request(`/trips/${tripId}/stops/${stopId}/activities/${activityId}`, { method: 'DELETE', token }),
 
@@ -52,4 +54,5 @@ export const api = {
   cityActivities: (cityId) => request(`/cities/${cityId}/activities`),
 
   getPublicTrip: (slug) => request(`/public/${slug}`),
+  copySharedTrip: (token, slug) => request(`/public/${slug}/copy`, { method: 'POST', token }),
 };

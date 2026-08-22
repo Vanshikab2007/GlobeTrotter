@@ -6,6 +6,7 @@ import CitySearchModal from '../components/CitySearchModal';
 import ActivitySearchModal from '../components/ActivitySearchModal';
 import BudgetPanel from '../components/BudgetPanel';
 import CalendarPanel from '../components/CalendarPanel';
+import Modal from '../components/Modal';
 
 const TABS = ['Build', 'Itinerary', 'Budget', 'Calendar'];
 
@@ -26,6 +27,11 @@ export default function TripDetail() {
   const [activityModalStop, setActivityModalStop] = useState(null);
   const [shareSlug, setShareSlug] = useState(null);
   const [busy, setBusy] = useState(false);
+
+  // Edit Modals State
+  const [editTripOpen, setEditTripOpen] = useState(false);
+  const [editStop, setEditStop] = useState(null);
+  const [editActivity, setEditActivity] = useState(null);
 
   const load = useCallback(() => {
     api.getTrip(token, id).then((d) => setTrip(d.trip)).catch((e) => setError(e.message));
@@ -81,6 +87,34 @@ export default function TripDetail() {
     setShareSlug(d.share_slug);
   }
 
+  async function handleMoveStop(stopId, direction) {
+    const sorted = [...trip.stops].sort((a,b) => a.order_index - b.order_index || new Date(a.start_date) - new Date(b.start_date));
+    const idx = sorted.findIndex(s => s.id === stopId);
+    if (idx < 0) return;
+    const swapIdx = idx + direction;
+    if (swapIdx < 0 || swapIdx >= sorted.length) return;
+    
+    const temp = sorted[idx];
+    sorted[idx] = sorted[swapIdx];
+    sorted[swapIdx] = temp;
+    
+    setBusy(true);
+    try {
+      let latestTrip = trip;
+      for (let i = 0; i < sorted.length; i++) {
+        if (sorted[i].order_index !== i) {
+          const res = await api.updateStop(token, id, sorted[i].id, { order_index: i });
+          latestTrip = res.trip;
+        }
+      }
+      setTrip(latestTrip);
+    } catch(e) {
+      alert(e.message);
+    } finally {
+      setBusy(false);
+    }
+  }
+
   if (error) {
     return <div className="container" style={{ paddingTop: 60 }}><p className="error-text">{error}</p></div>;
   }
@@ -98,6 +132,7 @@ export default function TripDetail() {
           </p>
         </div>
         <div style={{ display: 'flex', gap: 10 }}>
+          <button className="btn btn-secondary" onClick={() => setEditTripOpen(true)}>Edit</button>
           <button className="btn btn-secondary" onClick={handleShare}>Share trip</button>
           <button className="btn btn-danger" onClick={handleDeleteTrip}>Delete</button>
         </div>
@@ -133,8 +168,11 @@ export default function TripDetail() {
             busy={busy}
             onAddStopClick={() => setShowCityModal(true)}
             onDeleteStop={handleDeleteStop}
+            onEditStop={(s) => setEditStop(s)}
+            onMoveStop={handleMoveStop}
             onAddActivityClick={(stop) => setActivityModalStop(stop)}
             onDeleteActivity={handleDeleteActivity}
+            onEditActivity={(stop, act) => setEditActivity({ stop, act })}
           />
         )}
         {tab === 'Itinerary' && <ItineraryPanel trip={trip} />}
@@ -152,11 +190,23 @@ export default function TripDetail() {
           onAdd={(payload) => handleAddActivity(activityModalStop.id, payload)}
         />
       )}
+
+      {editTripOpen && (
+        <EditTripModal trip={trip} token={token} onClose={() => setEditTripOpen(false)} onSaved={(t) => setTrip(t)} />
+      )}
+      {editStop && (
+        <EditStopModal stop={editStop} tripId={trip.id} token={token} onClose={() => setEditStop(null)} onSaved={(t) => setTrip(t)} />
+      )}
+      {editActivity && (
+        <EditActivityModal stop={editActivity.stop} activity={editActivity.act} tripId={trip.id} token={token} onClose={() => setEditActivity(null)} onSaved={(t) => setTrip(t)} />
+      )}
     </div>
   );
 }
 
-function BuildPanel({ trip, onAddStopClick, onDeleteStop, onAddActivityClick, onDeleteActivity }) {
+function BuildPanel({ trip, onAddStopClick, onDeleteStop, onEditStop, onMoveStop, onAddActivityClick, onDeleteActivity, onEditActivity }) {
+  const sortedStops = [...trip.stops].sort((a,b) => a.order_index - b.order_index || new Date(a.start_date) - new Date(b.start_date));
+  
   return (
     <div>
       {trip.stops.length === 0 && (
@@ -167,7 +217,7 @@ function BuildPanel({ trip, onAddStopClick, onDeleteStop, onAddActivityClick, on
       )}
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-        {trip.stops.map((stop, i) => (
+        {sortedStops.map((stop, i) => (
           <div key={stop.id} className="card" style={{ padding: 20 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
               <div>
@@ -177,7 +227,12 @@ function BuildPanel({ trip, onAddStopClick, onDeleteStop, onAddActivityClick, on
                 <h3 style={{ fontSize: 18 }}>{stop.city_name}{stop.country ? `, ${stop.country}` : ''}</h3>
                 <p style={{ color: 'var(--muted)', fontSize: 13, marginTop: 4 }}>{fmt(stop.start_date)} → {fmt(stop.end_date)}</p>
               </div>
-              <button className="btn-ghost btn" onClick={() => onDeleteStop(stop.id)}>Remove stop</button>
+              <div style={{ display: 'flex', gap: 6 }}>
+                {i > 0 && <button className="btn-ghost btn" onClick={() => onMoveStop(stop.id, -1)}>↑</button>}
+                {i < sortedStops.length - 1 && <button className="btn-ghost btn" onClick={() => onMoveStop(stop.id, 1)}>↓</button>}
+                <button className="btn-ghost btn" onClick={() => onEditStop(stop)}>Edit</button>
+                <button className="btn-ghost btn" onClick={() => onDeleteStop(stop.id)}>✕</button>
+              </div>
             </div>
 
             <div style={{ marginTop: 16, display: 'flex', flexDirection: 'column', gap: 8 }}>
@@ -194,6 +249,7 @@ function BuildPanel({ trip, onAddStopClick, onDeleteStop, onAddActivityClick, on
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                     <span style={{ fontSize: 13, color: 'var(--gold)' }}>{a.cost ? `$${a.cost}` : 'Free'}</span>
+                    <button className="btn-ghost btn" onClick={() => onEditActivity(stop, a)} style={{ padding: 4 }}>Edit</button>
                     <button className="btn-ghost btn" onClick={() => onDeleteActivity(stop.id, a.id)} style={{ padding: 4 }}>✕</button>
                   </div>
                 </div>
@@ -221,9 +277,11 @@ function ItineraryPanel({ trip }) {
   if (trip.stops.length === 0) {
     return <div className="card empty-state"><p>Add stops and activities in the Build tab to see your itinerary here.</p></div>;
   }
+  const sortedStops = [...trip.stops].sort((a,b) => a.order_index - b.order_index || new Date(a.start_date) - new Date(b.start_date));
+  
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 28 }}>
-      {trip.stops.map((stop) => {
+      {sortedStops.map((stop) => {
         const byDay = {};
         for (const a of stop.activities) {
           const day = a.day_offset || 1;
@@ -255,5 +313,144 @@ function ItineraryPanel({ trip }) {
         );
       })}
     </div>
+  );
+}
+
+// --- Edit Modals ---
+
+function EditTripModal({ trip, token, onClose, onSaved }) {
+  const [name, setName] = useState(trip.name || '');
+  const [description, setDescription] = useState(trip.description || '');
+  const [startDate, setStartDate] = useState(trip.start_date || '');
+  const [endDate, setEndDate] = useState(trip.end_date || '');
+  const [error, setError] = useState('');
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    try {
+      const d = await api.updateTrip(token, trip.id, { name, description, start_date: startDate, end_date: endDate });
+      onSaved(d.trip);
+      onClose();
+    } catch(err) {
+      setError(err.message);
+    }
+  }
+
+  return (
+    <Modal title="Edit Trip" onClose={onClose}>
+      <form onSubmit={handleSubmit}>
+        <div className="field">
+          <label>Trip Name</label>
+          <input className="input" required value={name} onChange={e=>setName(e.target.value)} />
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+          <div className="field">
+            <label>Start Date</label>
+            <input type="date" className="input" required value={startDate} onChange={e=>setStartDate(e.target.value)} />
+          </div>
+          <div className="field">
+            <label>End Date</label>
+            <input type="date" className="input" required value={endDate} onChange={e=>setEndDate(e.target.value)} />
+          </div>
+        </div>
+        <div className="field">
+          <label>Description</label>
+          <textarea className="input" value={description} onChange={e=>setDescription(e.target.value)} rows={3}></textarea>
+        </div>
+        {error && <p className="error-text">{error}</p>}
+        <button type="submit" className="btn btn-primary" style={{ width: '100%', marginTop: 8 }}>Save Trip</button>
+      </form>
+    </Modal>
+  );
+}
+
+function EditStopModal({ tripId, stop, token, onClose, onSaved }) {
+  const [startDate, setStartDate] = useState(stop.start_date || '');
+  const [endDate, setEndDate] = useState(stop.end_date || '');
+  const [error, setError] = useState('');
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    try {
+      const d = await api.updateStop(token, tripId, stop.id, { start_date: startDate, end_date: endDate });
+      onSaved(d.trip);
+      onClose();
+    } catch(err) {
+      setError(err.message);
+    }
+  }
+
+  return (
+    <Modal title={`Edit ${stop.city_name}`} onClose={onClose}>
+      <form onSubmit={handleSubmit}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+          <div className="field">
+            <label>Arrive</label>
+            <input type="date" className="input" required value={startDate} onChange={e=>setStartDate(e.target.value)} />
+          </div>
+          <div className="field">
+            <label>Depart</label>
+            <input type="date" className="input" required value={endDate} onChange={e=>setEndDate(e.target.value)} />
+          </div>
+        </div>
+        {error && <p className="error-text">{error}</p>}
+        <button type="submit" className="btn btn-primary" style={{ width: '100%', marginTop: 8 }}>Save Stop</button>
+      </form>
+    </Modal>
+  );
+}
+
+function EditActivityModal({ tripId, stop, activity, token, onClose, onSaved }) {
+  const [name, setName] = useState(activity.name || '');
+  const [category, setCategory] = useState(activity.category || 'Other');
+  const [cost, setCost] = useState(activity.cost || 0);
+  const [duration, setDuration] = useState(activity.duration_hours || '');
+  const [day, setDay] = useState(activity.day_offset || 1);
+  const [error, setError] = useState('');
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    try {
+      const d = await api.updateActivity(token, tripId, stop.id, activity.id, { 
+        name, category, cost: Number(cost), duration_hours: duration ? Number(duration) : null, day_offset: Number(day) 
+      });
+      onSaved(d.trip);
+      onClose();
+    } catch(err) {
+      setError(err.message);
+    }
+  }
+
+  return (
+    <Modal title="Edit Activity" onClose={onClose}>
+      <form onSubmit={handleSubmit}>
+        <div className="field">
+          <label>Name</label>
+          <input className="input" required value={name} onChange={e=>setName(e.target.value)} />
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+          <div className="field">
+            <label>Category</label>
+            <input className="input" required value={category} onChange={e=>setCategory(e.target.value)} />
+          </div>
+          <div className="field">
+            <label>Cost ($)</label>
+            <input type="number" step="0.01" min="0" className="input" required value={cost} onChange={e=>setCost(e.target.value)} />
+          </div>
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+          <div className="field">
+            <label>Day of stop (1 = first day)</label>
+            <input type="number" min="1" className="input" required value={day} onChange={e=>setDay(e.target.value)} />
+          </div>
+          <div className="field">
+            <label>Duration (hours, optional)</label>
+            <input type="number" step="0.5" min="0" className="input" value={duration} onChange={e=>setDuration(e.target.value)} />
+          </div>
+        </div>
+        {error && <p className="error-text">{error}</p>}
+        <button type="submit" className="btn btn-primary" style={{ width: '100%', marginTop: 8 }}>Save Activity</button>
+      </form>
+    </Modal>
   );
 }

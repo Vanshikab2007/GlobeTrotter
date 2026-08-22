@@ -26,7 +26,7 @@ export default function BudgetPanel({ tripId }) {
         <p style={{ color: 'var(--muted)', fontSize: 13, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Estimated total</p>
         <h2 style={{ fontSize: 34, marginTop: 6, color: 'var(--sunset)' }}>${budget.total.toLocaleString()}</h2>
         <p style={{ color: 'var(--muted-2)', fontSize: 12, marginTop: 8 }}>
-          Stay & transport are placeholder estimates (${'{'}60/night, $120/hop{'}'}) until real bookings are added — a good next milestone.
+          Stay & transport are smart estimates based on each city's cost index until real bookings are added.
         </p>
 
         <div style={{ marginTop: 24, display: 'flex', flexDirection: 'column', gap: 10 }}>

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { api } from '../lib/api';
+import { useAuth } from '../context/AuthContext';
 
 function fmt(d) {
   if (!d) return '—';
@@ -9,12 +10,31 @@ function fmt(d) {
 
 export default function SharedTrip() {
   const { slug } = useParams();
+  const navigate = useNavigate();
+  const { token, user } = useAuth();
+  
   const [trip, setTrip] = useState(null);
   const [error, setError] = useState('');
+  const [copying, setCopying] = useState(false);
 
   useEffect(() => {
     api.getPublicTrip(slug).then((d) => setTrip(d.trip)).catch((e) => setError(e.message));
   }, [slug]);
+
+  async function handleCopy() {
+    if (!token) {
+      navigate('/login');
+      return;
+    }
+    setCopying(true);
+    try {
+      const d = await api.copySharedTrip(token, slug);
+      navigate(`/trips/${d.newTripId}`);
+    } catch (e) {
+      alert(e.message);
+      setCopying(false);
+    }
+  }
 
   if (error) {
     return (
@@ -28,11 +48,21 @@ export default function SharedTrip() {
 
   return (
     <div className="container" style={{ paddingTop: 48, paddingBottom: 64, maxWidth: 720 }}>
-      <span className="badge" style={{ background: 'var(--ocean-dim)', color: 'var(--ocean)', marginBottom: 12 }}>
-        Shared itinerary · read only
-      </span>
-      <h1 style={{ fontSize: 30, marginTop: 10 }}>{trip.name}</h1>
-      <p style={{ color: 'var(--muted)', marginTop: 8 }}>{fmt(trip.start_date)} → {fmt(trip.end_date)}</p>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 16 }}>
+        <div>
+          <span className="badge" style={{ background: 'var(--ocean-dim)', color: 'var(--ocean)', marginBottom: 12 }}>
+            Shared itinerary · read only
+          </span>
+          <h1 style={{ fontSize: 30, marginTop: 10 }}>{trip.name}</h1>
+          <p style={{ color: 'var(--muted)', marginTop: 8 }}>{fmt(trip.start_date)} → {fmt(trip.end_date)}</p>
+        </div>
+        <div>
+          <button className="btn btn-primary" onClick={handleCopy} disabled={copying}>
+            {copying ? 'Copying...' : 'Copy this trip'}
+          </button>
+        </div>
+      </div>
+      
       {trip.description && <p style={{ color: 'var(--muted-2)', marginTop: 12 }}>{trip.description}</p>}
 
       <div style={{ marginTop: 32, display: 'flex', flexDirection: 'column', gap: 24 }}>
@@ -56,9 +86,11 @@ export default function SharedTrip() {
         ))}
       </div>
 
-      <p style={{ textAlign: 'center', marginTop: 40 }}>
-        <Link to="/" className="btn btn-primary">Plan your own trip on GlobeTrotter</Link>
-      </p>
+      {!user && (
+        <p style={{ textAlign: 'center', marginTop: 40 }}>
+          <Link to="/" className="btn btn-secondary">Plan your own trip on GlobeTrotter</Link>
+        </p>
+      )}
     </div>
   );
 }
