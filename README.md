@@ -1,6 +1,6 @@
 # GlobeTrotter — MVP
 
-A multi-city travel planner: create a trip, add stops (cities) with dates, add activities to each stop from a searchable catalog or as custom entries, then see the day-wise itinerary, an auto-computed budget breakdown, and a day-by-day calendar. Trips can be shared as a read-only public link.
+Dreaming up your next adventure? Globetrotter makes trip planning easy and fun organize your stops, track your budget, and get personalized recommendations, all in one place.
 
 ## Stack
 
