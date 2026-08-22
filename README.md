@@ -36,14 +36,17 @@ For a production build: `npm run build` (outputs to `client/dist`), served by an
 
 ## Recommended demo flow
 
-1. Register a new account → lands on Dashboard (empty state).
-2. "Plan a trip" → name it, set dates → redirected straight into the trip's Build tab.
-3. "Add another stop" → search a city (e.g. Tokyo) → set arrival/departure dates.
-4. "Add activity" on that stop → filter the catalog by category, add 2–3 activities (or add a custom one).
-5. Repeat for a second city to show multi-city support.
-6. Switch tabs: **Itinerary** (day-wise plan), **Budget** (auto total + pie chart), **Calendar** (day-by-day timeline).
-7. "Share trip" → open the `/share/:slug` link in a new tab to show the public read-only view.
-
+1. Sign up → new user lands on an empty Dashboard, ready to create their first trip.
+2. Create a trip → enter a trip name and travel dates → instantly taken into the trip's Build tab.
+3. Add a stop → search and select a city (e.g., Tokyo) → set arrival and departure dates for that leg.
+4. Add activities → filter the activity catalog by category and add 2–3 activities to the stop, or create a custom one.
+5. Add a second stop → repeat the process for another city to demonstrate multi-city itinerary support.
+6. Reorder or edit stops → drag stops to resequence the trip, or edit dates/activities as plans change.
+7. Explore the trip views → switch between:
+8. Itinerary — day-by-day plan of the full trip
+9. Budget — auto-calculated total spend with a visual pie chart breakdown
+10. Calendar — timeline view of the entire trip
+11. Share the trip → click "Share trip" and open the generated /share/:slug link in a new tab to preview the public, read-only version.
 ## What's implemented
 
 - Auth (register/login/JWT), all main trip CRUD, stop + activity CRUD
