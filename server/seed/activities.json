@@ -1,0 +1,72 @@
+[
+  { "city": "Paris", "name": "Louvre Museum Tour", "category": "Sightseeing", "cost": 25, "duration_hours": 3, "description": "Guided walk through the world's largest art museum" },
+  { "city": "Paris", "name": "Seine River Cruise", "category": "Sightseeing", "cost": 18, "duration_hours": 1.5, "description": "Evening cruise past illuminated landmarks" },
+  { "city": "Paris", "name": "Croissant & Pastry Crawl", "category": "Food", "cost": 30, "duration_hours": 2, "description": "Sample the best boulangeries in Le Marais" },
+  { "city": "Paris", "name": "Eiffel Tower Summit", "category": "Sightseeing", "cost": 35, "duration_hours": 2, "description": "Skip-the-line access to the top level" },
+
+  { "city": "Tokyo", "name": "Shibuya & Harajuku Walk", "category": "Sightseeing", "cost": 0, "duration_hours": 3, "description": "Self-guided pop-culture street tour" },
+  { "city": "Tokyo", "name": "Sushi Making Class", "category": "Food", "cost": 60, "duration_hours": 2.5, "description": "Hands-on class with a local chef" },
+  { "city": "Tokyo", "name": "TeamLab Planets", "category": "Adventure", "cost": 32, "duration_hours": 2, "description": "Immersive digital art installation" },
+  { "city": "Tokyo", "name": "Senso-ji Temple Visit", "category": "Sightseeing", "cost": 0, "duration_hours": 1.5, "description": "Tokyo's oldest Buddhist temple" },
+
+  { "city": "New York City", "name": "Broadway Show", "category": "Entertainment", "cost": 120, "duration_hours": 3, "description": "Evening ticket to a top-rated musical" },
+  { "city": "New York City", "name": "Central Park Bike Ride", "category": "Adventure", "cost": 25, "duration_hours": 2, "description": "Rent a bike and loop the park" },
+  { "city": "New York City", "name": "Statue of Liberty Ferry", "category": "Sightseeing", "cost": 24, "duration_hours": 3, "description": "Ferry to Liberty and Ellis Island" },
+  { "city": "New York City", "name": "Pizza & Bagel Tour", "category": "Food", "cost": 45, "duration_hours": 2.5, "description": "NYC's classic carb crawl" },
+
+  { "city": "Bangkok", "name": "Grand Palace Tour", "category": "Sightseeing", "cost": 15, "duration_hours": 2.5, "description": "Guided visit to the royal complex" },
+  { "city": "Bangkok", "name": "Street Food Night Market", "category": "Food", "cost": 12, "duration_hours": 2, "description": "Chatuchak night market food crawl" },
+  { "city": "Bangkok", "name": "Chao Phraya Long-Tail Boat", "category": "Adventure", "cost": 20, "duration_hours": 1.5, "description": "River tour through Bangkok's canals" },
+
+  { "city": "Rome", "name": "Colosseum & Forum Tour", "category": "Sightseeing", "cost": 28, "duration_hours": 3, "description": "Skip-the-line guided history tour" },
+  { "city": "Rome", "name": "Pasta Making Class", "category": "Food", "cost": 55, "duration_hours": 3, "description": "Hands-on class in a Trastevere kitchen" },
+  { "city": "Rome", "name": "Vatican Museums & Sistine Chapel", "category": "Sightseeing", "cost": 32, "duration_hours": 3.5, "description": "Timed entry with skip-the-line access" },
+
+  { "city": "Bali", "name": "Ubud Rice Terrace Trek", "category": "Adventure", "cost": 15, "duration_hours": 3, "description": "Guided walk through Tegallalang terraces" },
+  { "city": "Bali", "name": "Sunrise Surf Lesson", "category": "Adventure", "cost": 35, "duration_hours": 2, "description": "Beginner-friendly session at Canggu" },
+  { "city": "Bali", "name": "Balinese Cooking Class", "category": "Food", "cost": 40, "duration_hours": 3, "description": "Market visit plus hands-on cooking" },
+
+  { "city": "Barcelona", "name": "Sagrada Familia Tour", "category": "Sightseeing", "cost": 30, "duration_hours": 2, "description": "Guided tour of Gaudi's masterpiece" },
+  { "city": "Barcelona", "name": "Tapas Crawl", "category": "Food", "cost": 45, "duration_hours": 3, "description": "Four stops through the Gothic Quarter" },
+  { "city": "Barcelona", "name": "Park Guell Visit", "category": "Sightseeing", "cost": 12, "duration_hours": 1.5, "description": "Mosaic-covered park with city views" },
+
+  { "city": "Dubai", "name": "Desert Safari & BBQ", "category": "Adventure", "cost": 70, "duration_hours": 5, "description": "Dune bashing, camel ride, and dinner" },
+  { "city": "Dubai", "name": "Burj Khalifa Observation Deck", "category": "Sightseeing", "cost": 45, "duration_hours": 1.5, "description": "Views from the world's tallest tower" },
+
+  { "city": "London", "name": "British Museum Highlights", "category": "Sightseeing", "cost": 0, "duration_hours": 2.5, "description": "Free entry, guided highlights walk" },
+  { "city": "London", "name": "West End Show", "category": "Entertainment", "cost": 95, "duration_hours": 3, "description": "Evening theatre ticket" },
+  { "city": "London", "name": "Traditional Afternoon Tea", "category": "Food", "cost": 55, "duration_hours": 1.5, "description": "Classic tea service in Mayfair" },
+
+  { "city": "Cape Town", "name": "Table Mountain Cable Car", "category": "Sightseeing", "cost": 30, "duration_hours": 2, "description": "Panoramic views over the city" },
+  { "city": "Cape Town", "name": "Cape Peninsula Day Tour", "category": "Adventure", "cost": 60, "duration_hours": 8, "description": "Penguins, Cape Point, and scenic drives" },
+
+  { "city": "Sydney", "name": "Sydney Opera House Tour", "category": "Sightseeing", "cost": 42, "duration_hours": 1.5, "description": "Behind-the-scenes architecture tour" },
+  { "city": "Sydney", "name": "Bondi to Coogee Coastal Walk", "category": "Adventure", "cost": 0, "duration_hours": 3, "description": "Scenic clifftop coastal trail" },
+
+  { "city": "Kyoto", "name": "Fushimi Inari Shrine Hike", "category": "Sightseeing", "cost": 0, "duration_hours": 2.5, "description": "Thousands of vermilion torii gates" },
+  { "city": "Kyoto", "name": "Tea Ceremony Experience", "category": "Food", "cost": 38, "duration_hours": 1, "description": "Traditional matcha ceremony" },
+
+  { "city": "Amsterdam", "name": "Canal Cruise", "category": "Sightseeing", "cost": 20, "duration_hours": 1, "description": "Evening cruise through the canal ring" },
+  { "city": "Amsterdam", "name": "Van Gogh Museum", "category": "Sightseeing", "cost": 22, "duration_hours": 2, "description": "The world's largest Van Gogh collection" },
+
+  { "city": "Marrakech", "name": "Medina & Souk Walking Tour", "category": "Sightseeing", "cost": 18, "duration_hours": 3, "description": "Guided walk through the old city" },
+  { "city": "Marrakech", "name": "Sahara Desert Day Trip", "category": "Adventure", "cost": 65, "duration_hours": 10, "description": "Camel trek and desert camp" },
+
+  { "city": "Ahmedabad", "name": "Sabarmati Ashram Visit", "category": "Sightseeing", "cost": 0, "duration_hours": 1.5, "description": "Gandhi's former residence and museum" },
+  { "city": "Ahmedabad", "name": "Manek Chowk Food Walk", "category": "Food", "cost": 8, "duration_hours": 2, "description": "Legendary night food market" },
+
+  { "city": "Jaipur", "name": "Amber Fort Tour", "category": "Sightseeing", "cost": 12, "duration_hours": 3, "description": "Hilltop fort with elephant gate" },
+  { "city": "Jaipur", "name": "Hawa Mahal & City Palace", "category": "Sightseeing", "cost": 10, "duration_hours": 2.5, "description": "Iconic pink sandstone facade" },
+
+  { "city": "Goa", "name": "Old Goa Church Trail", "category": "Sightseeing", "cost": 0, "duration_hours": 2, "description": "UNESCO Portuguese-era basilicas" },
+  { "city": "Goa", "name": "Sunset Beach Shack Dinner", "category": "Food", "cost": 20, "duration_hours": 2, "description": "Seafood dinner on Anjuna beach" },
+
+  { "city": "Singapore", "name": "Gardens by the Bay", "category": "Sightseeing", "cost": 24, "duration_hours": 2.5, "description": "Supertree Grove and cloud forest" },
+  { "city": "Singapore", "name": "Hawker Centre Food Tour", "category": "Food", "cost": 25, "duration_hours": 2, "description": "Guided tasting at Maxwell Food Centre" },
+
+  { "city": "Istanbul", "name": "Hagia Sophia & Blue Mosque", "category": "Sightseeing", "cost": 15, "duration_hours": 2.5, "description": "Two icons of Istanbul's skyline" },
+  { "city": "Istanbul", "name": "Bosphorus Sunset Cruise", "category": "Sightseeing", "cost": 22, "duration_hours": 2, "description": "Cruise between Europe and Asia" },
+
+  { "city": "Reykjavik", "name": "Golden Circle Day Tour", "category": "Adventure", "cost": 85, "duration_hours": 8, "description": "Geysir, Gullfoss, and Thingvellir" },
+  { "city": "Reykjavik", "name": "Blue Lagoon Soak", "category": "Adventure", "cost": 70, "duration_hours": 3, "description": "Geothermal spa in a lava field" }
+]

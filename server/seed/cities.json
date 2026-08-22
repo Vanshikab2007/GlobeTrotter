@@ -1,0 +1,22 @@
+[
+  { "name": "Paris", "country": "France", "region": "Europe", "cost_index": 78, "popularity": 98, "blurb": "Icon of romance, art, and pastry" },
+  { "name": "Tokyo", "country": "Japan", "region": "Asia", "cost_index": 70, "popularity": 97, "blurb": "Neon streets meet ancient shrines" },
+  { "name": "New York City", "country": "USA", "region": "North America", "cost_index": 85, "popularity": 96, "blurb": "The city that never sleeps" },
+  { "name": "Bangkok", "country": "Thailand", "region": "Asia", "cost_index": 35, "popularity": 90, "blurb": "Street food capital of the world" },
+  { "name": "Rome", "country": "Italy", "region": "Europe", "cost_index": 65, "popularity": 94, "blurb": "Where every street is a history lesson" },
+  { "name": "Bali", "country": "Indonesia", "region": "Asia", "cost_index": 30, "popularity": 92, "blurb": "Rice terraces, surf, and temples" },
+  { "name": "Barcelona", "country": "Spain", "region": "Europe", "cost_index": 60, "popularity": 91, "blurb": "Gaudi's playground by the sea" },
+  { "name": "Dubai", "country": "UAE", "region": "Middle East", "cost_index": 80, "popularity": 88, "blurb": "Desert skyline of superlatives" },
+  { "name": "London", "country": "UK", "region": "Europe", "cost_index": 88, "popularity": 95, "blurb": "Centuries of history, endless museums" },
+  { "name": "Cape Town", "country": "South Africa", "region": "Africa", "cost_index": 40, "popularity": 82, "blurb": "Mountains meet two oceans" },
+  { "name": "Sydney", "country": "Australia", "region": "Oceania", "cost_index": 82, "popularity": 87, "blurb": "Harbour views and beach culture" },
+  { "name": "Kyoto", "country": "Japan", "region": "Asia", "cost_index": 55, "popularity": 89, "blurb": "A thousand temples, one old capital" },
+  { "name": "Amsterdam", "country": "Netherlands", "region": "Europe", "cost_index": 72, "popularity": 86, "blurb": "Canals, bikes, and golden-age art" },
+  { "name": "Marrakech", "country": "Morocco", "region": "Africa", "cost_index": 32, "popularity": 80, "blurb": "Souks, spice, and desert gateway" },
+  { "name": "Ahmedabad", "country": "India", "region": "Asia", "cost_index": 22, "popularity": 70, "blurb": "Heritage city on the Sabarmati" },
+  { "name": "Jaipur", "country": "India", "region": "Asia", "cost_index": 20, "popularity": 84, "blurb": "The Pink City of forts and palaces" },
+  { "name": "Goa", "country": "India", "region": "Asia", "cost_index": 25, "popularity": 85, "blurb": "Beaches, sunsets, and Portuguese charm" },
+  { "name": "Singapore", "country": "Singapore", "region": "Asia", "cost_index": 75, "popularity": 89, "blurb": "Gardens, hawker food, and skyline" },
+  { "name": "Istanbul", "country": "Turkey", "region": "Europe", "cost_index": 42, "popularity": 88, "blurb": "Where continents and eras meet" },
+  { "name": "Reykjavik", "country": "Iceland", "region": "Europe", "cost_index": 90, "popularity": 79, "blurb": "Gateway to glaciers and northern lights" }
+]
