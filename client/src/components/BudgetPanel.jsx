@@ -31,7 +31,7 @@ export default function BudgetPanel({ tripId }) {
         
         {budget.limit && (
           <div style={{ marginTop: 16 }}>
-            <div style={{ height: 8, background: 'var(--ink-900)', borderRadius: 4, overflow: 'hidden', border: '1px solid var(--line)' }}>
+            <div style={{ height: 8, background: 'var(--surface-sunken)', borderRadius: 4, overflow: 'hidden', border: '1px solid var(--line)' }}>
               <div style={{ 
                 height: '100%', 
                 width: `${Math.min(100, (budget.total / budget.limit) * 100)}%`,

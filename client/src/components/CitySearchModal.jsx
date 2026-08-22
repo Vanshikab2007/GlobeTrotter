@@ -75,7 +75,7 @@ export default function CitySearchModal({ onClose, onAdd }) {
             style={{
               display: 'flex', justifyContent: 'space-between', alignItems: 'center',
               textAlign: 'left', padding: '12px 14px', borderRadius: 10,
-              border: '1px solid var(--line)', background: 'var(--ink-900)', color: 'var(--paper)',
+              border: '1px solid var(--line)', background: 'var(--surface-sunken)', color: 'var(--text-primary)',
             }}
           >
             <span>

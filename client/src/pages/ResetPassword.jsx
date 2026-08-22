@@ -51,7 +51,7 @@ export default function ResetPassword() {
       {success ? (
         <div className="card" style={{ padding: 24, textAlign: 'center', borderColor: 'var(--ocean)' }}>
           <h3 style={{ color: 'var(--ocean)', marginBottom: 12 }}>Password reset successful</h3>
-          <p style={{ fontSize: 14, color: 'var(--paper)' }}>
+          <p style={{ fontSize: 14, color: 'var(--text-primary)' }}>
             Your password has been securely updated. You will be redirected to the login page momentarily.
           </p>
         </div>
@@ -78,3 +78,4 @@ export default function ResetPassword() {
     </div>
   );
 }
+

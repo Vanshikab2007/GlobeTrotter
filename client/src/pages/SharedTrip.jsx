@@ -74,7 +74,7 @@ export default function SharedTrip() {
               {stop.activities.map((a) => (
                 <div key={a.id} style={{
                   display: 'flex', justifyContent: 'space-between', padding: '9px 12px',
-                  borderRadius: 8, border: '1px solid var(--line)', background: 'var(--ink-900)', fontSize: 13,
+                  borderRadius: 8, border: '1px solid var(--line)', background: 'var(--surface-sunken)', fontSize: 13,
                 }}>
                   <span>{a.name}</span>
                   <span style={{ color: 'var(--gold)' }}>{a.cost ? `$${a.cost}` : 'Free'}</span>

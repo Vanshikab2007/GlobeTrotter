@@ -48,7 +48,7 @@ export default function Dashboard() {
 
       {trips && trips.length === 0 && (
         <div className="card empty-state" style={{ marginBottom: 40 }}>
-          <p style={{ fontSize: 15, color: 'var(--paper)', marginBottom: 6 }}>No trips yet</p>
+          <p style={{ fontSize: 15, color: 'var(--text-primary)', marginBottom: 6 }}>No trips yet</p>
           <p style={{ marginBottom: 16 }}>Plan your first multi-city itinerary — add stops, activities, and a budget.</p>
           <Link to="/trips/new" className="btn btn-primary">Plan your first trip</Link>
         </div>
@@ -94,3 +94,4 @@ export default function Dashboard() {
     </div>
   );
 }
+

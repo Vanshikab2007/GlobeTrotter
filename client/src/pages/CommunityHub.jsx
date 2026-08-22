@@ -45,12 +45,12 @@ export default function CommunityHub() {
                   coverOverride={trip.cover_photo} 
                   style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
                 />
-                <div style={{ position: 'absolute', top: 12, right: 12, background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)', padding: '4px 10px', borderRadius: 16, fontSize: 12, fontWeight: 600 }}>
+                <div style={{ position: 'absolute', top: 12, right: 12, background: 'rgba(255,255,255,0.85)', backdropFilter: 'blur(4px)', color: 'var(--text-primary)', padding: '4px 10px', borderRadius: 16, fontSize: 12, fontWeight: 600 }}>
                   {trip.stopCount} {trip.stopCount === 1 ? 'stop' : 'stops'}
                 </div>
               </div>
               <div style={{ padding: 20, flex: 1, display: 'flex', flexDirection: 'column' }}>
-                <h3 style={{ fontSize: 18, marginBottom: 6, color: 'var(--paper)' }}>{trip.name}</h3>
+                <h3 style={{ fontSize: 18, marginBottom: 6, color: 'var(--text-primary)' }}>{trip.name}</h3>
                 <p style={{ color: 'var(--muted)', fontSize: 13, marginBottom: 16, flex: 1 }}>
                   {trip.description ? trip.description.substring(0, 80) + (trip.description.length > 80 ? '...' : '') : 'An amazing journey waiting to be explored.'}
                 </p>
@@ -72,3 +72,4 @@ export default function CommunityHub() {
     </div>
   );
 }
+

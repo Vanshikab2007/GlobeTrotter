@@ -176,7 +176,7 @@ export default function TripDetail() {
       {shareSlug && (
         <div className="card" style={{ padding: 14, marginTop: 16, display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
           <span style={{ color: 'var(--ocean)', fontSize: 13 }}>Public link (read-only):</span>
-          <code style={{ fontSize: 13, color: 'var(--paper)' }}>/share/{shareSlug}</code>
+          <code style={{ fontSize: 13, color: 'var(--text-primary)' }}>/share/{shareSlug}</code>
         </div>
       )}
 
@@ -186,7 +186,7 @@ export default function TripDetail() {
             style={{
               padding: '10px 16px', background: 'transparent', border: 'none',
               borderBottom: `2px solid ${tab === t ? 'var(--sunset)' : 'transparent'}`,
-              color: tab === t ? 'var(--paper)' : 'var(--muted)',
+              color: tab === t ? 'var(--text-primary)' : 'var(--muted)',
               fontWeight: 600, fontSize: 14,
             }}>
             {t}
@@ -274,7 +274,7 @@ function BuildPanel({ trip, onAddStopClick, onDeleteStop, onEditStop, onReorderS
     <div>
       {trip.stops.length === 0 && (
         <div className="card empty-state" style={{ marginBottom: 20 }}>
-          <p style={{ color: 'var(--paper)', marginBottom: 6 }}>No stops yet</p>
+          <p style={{ color: 'var(--text-primary)', marginBottom: 6 }}>No stops yet</p>
           <p>Add the first city on this trip to start building the itinerary.</p>
         </div>
       )}
@@ -318,7 +318,7 @@ function BuildPanel({ trip, onAddStopClick, onDeleteStop, onEditStop, onReorderS
               {stop.activities.map((a) => (
                 <div key={a.id} style={{
                   display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-                  padding: '10px 14px', borderRadius: 10, border: '1px solid var(--line)', background: 'var(--ink-900)',
+                  padding: '10px 14px', borderRadius: 10, border: '1px solid var(--line)', background: 'var(--surface-sunken)',
                 }}>
                   <div>
                     <span style={{ fontSize: 14, fontWeight: 500 }}>{a.name}</span>
@@ -379,7 +379,7 @@ function ItineraryPanel({ trip }) {
                   {byDay[day].map((a) => (
                     <div key={a.id} style={{
                       display: 'flex', justifyContent: 'space-between', padding: '10px 14px',
-                      borderRadius: 10, border: '1px solid var(--line)', background: 'var(--ink-900)',
+                      borderRadius: 10, border: '1px solid var(--line)', background: 'var(--surface-sunken)',
                     }}>
                       <span style={{ fontSize: 14 }}>{a.name}</span>
                       <span style={{ fontSize: 13, color: 'var(--gold)' }}>{a.cost ? `$${a.cost}` : 'Free'}</span>
@@ -588,3 +588,4 @@ function CoverUploadButton({ tripId, token, onUploaded }) {
     </label>
   );
 }
+

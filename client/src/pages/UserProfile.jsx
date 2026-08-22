@@ -101,7 +101,7 @@ export default function UserProfile() {
               <div 
                 style={{ 
                   width: 80, height: 80, borderRadius: '50%', overflow: 'hidden', 
-                  background: 'var(--ink-900)', border: '2px solid var(--line)',
+                  background: 'var(--surface-sunken)', border: '2px solid var(--line)',
                   display: 'flex', justifyContent: 'center', alignItems: 'center'
                 }}
               >

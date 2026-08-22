@@ -29,7 +29,7 @@ export default function AdminDashboard() {
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 16, marginBottom: 40 }}>
         <div className="card" style={{ padding: 24, textAlign: 'center' }}>
           <p style={{ color: 'var(--muted)', fontSize: 13, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Total Users</p>
-          <p style={{ fontSize: 36, fontWeight: 700, color: 'var(--paper)', marginTop: 8 }}>{stats.totalUsers}</p>
+          <p style={{ fontSize: 36, fontWeight: 700, color: 'var(--sunset)', marginTop: 8 }}>{stats.totalUsers}</p>
         </div>
         <div className="card" style={{ padding: 24, textAlign: 'center' }}>
           <p style={{ color: 'var(--muted)', fontSize: 13, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Total Trips</p>
@@ -55,8 +55,8 @@ export default function AdminDashboard() {
                   <XAxis dataKey="city_name" stroke="var(--muted)" fontSize={12} tickLine={false} axisLine={false} />
                   <YAxis stroke="var(--muted)" fontSize={12} tickLine={false} axisLine={false} />
                   <Tooltip 
-                    cursor={{ fill: 'var(--ink-700)' }}
-                    contentStyle={{ background: 'var(--ink-800)', border: '1px solid var(--line)', borderRadius: 8 }} 
+                    cursor={{ fill: 'var(--surface-sunken)' }}
+                    contentStyle={{ background: 'var(--bg-main)', border: '1px solid var(--line)', borderRadius: 8 }} 
                   />
                   <Bar dataKey="count" radius={[4, 4, 0, 0]}>
                     {popularDestinations.map((entry, index) => (
@@ -80,10 +80,10 @@ export default function AdminDashboard() {
                   <XAxis dataKey="day" stroke="var(--muted)" fontSize={12} tickLine={false} axisLine={false} />
                   <YAxis stroke="var(--muted)" fontSize={12} tickLine={false} axisLine={false} />
                   <Tooltip 
-                    cursor={{ fill: 'var(--ink-700)' }}
-                    contentStyle={{ background: 'var(--ink-800)', border: '1px solid var(--line)', borderRadius: 8 }} 
+                    cursor={{ fill: 'var(--surface-sunken)' }}
+                    contentStyle={{ background: 'var(--bg-main)', border: '1px solid var(--line)', borderRadius: 8 }} 
                   />
-                  <Bar dataKey="count" fill="var(--paper)" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="count" fill="var(--sunset)" radius={[4, 4, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -95,3 +95,4 @@ export default function AdminDashboard() {
     </div>
   );
 }
+

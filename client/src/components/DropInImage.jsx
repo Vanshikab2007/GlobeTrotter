@@ -28,7 +28,7 @@ export default function DropInImage({ folder, name, coverOverride, style, fallba
 
   if (failed) {
     if (fallbackStyle) {
-      return <div style={{ background: 'var(--ink-900)', ...fallbackStyle }} />;
+      return <div style={{ background: 'var(--surface-sunken)', ...fallbackStyle }} />;
     }
     return null;
   }

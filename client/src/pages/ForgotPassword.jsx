@@ -36,7 +36,7 @@ export default function ForgotPassword() {
       {success ? (
         <div className="card" style={{ padding: 24, textAlign: 'center', borderColor: 'var(--ocean)' }}>
           <h3 style={{ color: 'var(--ocean)', marginBottom: 12 }}>Check your email</h3>
-          <p style={{ fontSize: 14, color: 'var(--paper)' }}>
+          <p style={{ fontSize: 14, color: 'var(--text-primary)' }}>
             If an account exists for <b>{email}</b>, we've sent a password reset link.
           </p>
           
@@ -79,3 +79,4 @@ export default function ForgotPassword() {
     </div>
   );
 }
+
