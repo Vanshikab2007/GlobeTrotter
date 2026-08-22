@@ -1,4 +1,4 @@
-import Database from 'better-sqlite3';
+import { DatabaseSync } from 'node:sqlite';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -6,9 +6,24 @@ import { fileURLToPath } from 'url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DB_PATH = path.join(__dirname, 'globetrotter.db');
 
-export const db = new Database(DB_PATH);
-db.pragma('journal_mode = WAL');
-db.pragma('foreign_keys = ON');
+export const db = new DatabaseSync(DB_PATH);
+db.exec('PRAGMA journal_mode = WAL');
+db.exec('PRAGMA foreign_keys = ON');
+
+// Polyfill transaction for node:sqlite
+db.transaction = function(fn) {
+  return function(...args) {
+    db.exec('BEGIN TRANSACTION');
+    try {
+      const result = fn(...args);
+      db.exec('COMMIT');
+      return result;
+    } catch (ex) {
+      db.exec('ROLLBACK');
+      throw ex;
+    }
+  };
+};
 
 db.exec(`
 CREATE TABLE IF NOT EXISTS users (
@@ -98,7 +113,14 @@ if (cityCount === 0) {
     for (const a of rows) {
       const city_id = cityIdByName[a.city];
       if (!city_id) continue;
-      insertActivity.run({ ...a, city_id });
+      insertActivity.run({
+        city_id,
+        name: a.name,
+        category: a.category,
+        cost: a.cost,
+        duration_hours: a.duration_hours,
+        description: a.description
+      });
     }
   });
   insertActivities(activities);
