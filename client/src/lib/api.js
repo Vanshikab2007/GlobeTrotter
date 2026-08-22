@@ -54,12 +54,11 @@ export const api = {
   deleteActivity: (token, tripId, stopId, activityId) =>
     request(`/trips/${tripId}/stops/${stopId}/activities/${activityId}`, { method: 'DELETE', token }),
 
-  getAdminStats: (token) => request('/admin/stats', { token }),
 
   searchCities: (q) => request(`/cities${q ? `?q=${encodeURIComponent(q)}` : ''}`),
   cityActivities: (cityId) => request(`/cities/${cityId}/activities`),
 
-  getPublicTrips: () => request('/public'),
+
   getPublicTrip: (slug) => request(`/public/${slug}`),
   copySharedTrip: (token, slug) => request(`/public/${slug}/copy`, { method: 'POST', token }),
 };

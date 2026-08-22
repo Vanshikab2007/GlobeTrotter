@@ -4,23 +4,6 @@ import { requireAuth } from '../middleware/auth.js';
 
 const router = Router();
 
-// GET /api/public - list all public trips for Community Hub
-router.get('/', (req, res) => {
-  const trips = db.prepare(`
-    SELECT trips.*, users.name as user_name, users.profile_photo as user_profile_photo
-    FROM trips 
-    JOIN users ON trips.user_id = users.id 
-    WHERE trips.is_public = 1 
-    ORDER BY trips.created_at DESC
-  `).all();
-  
-  // Attach stops count to each trip
-  for (const trip of trips) {
-    trip.stopCount = db.prepare('SELECT COUNT(*) as c FROM stops WHERE trip_id = ?').get(trip.id).c;
-  }
-  
-  res.json({ trips });
-});
 
 // GET /api/public/:slug - read-only shared itinerary, no auth required
 router.get('/:slug', (req, res) => {

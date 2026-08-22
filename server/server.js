@@ -7,7 +7,6 @@ import authRoutes from './routes/auth.js';
 import tripRoutes from './routes/trips.js';
 import cityRoutes from './routes/cities.js';
 import publicRoutes from './routes/public.js';
-import adminRoutes from './routes/admin.js';
 
 dotenv.config();
 
@@ -23,7 +22,6 @@ app.use('/api/auth', authRoutes);
 app.use('/api/trips', tripRoutes);
 app.use('/api/cities', cityRoutes);
 app.use('/api/public', publicRoutes);
-app.use('/api/admin', adminRoutes);
 
 // Fallback error handler
 app.use((err, req, res, next) => {
