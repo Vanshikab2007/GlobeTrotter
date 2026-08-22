@@ -30,6 +30,7 @@ export const api = {
   me: (token) => request('/auth/me', { token }),
   forgotPassword: (email) => request('/auth/forgot-password', { body: { email } }),
   resetPassword: (token, password) => request('/auth/reset-password', { body: { token, password } }),
+  updateUser: (token, payload) => request('/auth/me', { method: 'PUT', body: payload, token }),
 
   listTrips: (token) => request('/trips', { token }),
   createTrip: (token, payload) => request('/trips', { method: 'POST', body: payload, token }),

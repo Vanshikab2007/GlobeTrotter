@@ -38,9 +38,55 @@ router.post('/login', (req, res) => {
 });
 
 router.get('/me', requireAuth, (req, res) => {
-  const row = db.prepare('SELECT id, name, email, created_at FROM users WHERE id = ?').get(req.user.id);
+  const row = db.prepare('SELECT id, name, email, profile_photo, city, country, phone_number, created_at FROM users WHERE id = ?').get(req.user.id);
   if (!row) return res.status(404).json({ error: 'User not found' });
   res.json({ user: row });
+});
+
+router.put('/me', requireAuth, (req, res) => {
+  const row = db.prepare('SELECT * FROM users WHERE id = ?').get(req.user.id);
+  if (!row) return res.status(404).json({ error: 'User not found' });
+  
+  const { name, email, city, country, phone_number, profile_photo } = req.body || {};
+  if (!name || !email) return res.status(400).json({ error: 'Name and email are required' });
+
+  let photoUrl = row.profile_photo;
+  
+  // Handle profile photo upload (base64)
+  if (profile_photo && profile_photo.startsWith('data:image/')) {
+    const matches = profile_photo.match(/^data:image\/([A-Za-z-+\/]+);base64,(.+)$/);
+    if (matches && matches.length === 3) {
+      const extension = matches[1] === 'jpeg' ? 'jpg' : matches[1];
+      const buffer = Buffer.from(matches[2], 'base64');
+      const fs = require('fs');
+      const path = require('path');
+      const dirPath = path.join(process.cwd(), '../client/public/images/users');
+      if (!fs.existsSync(dirPath)) {
+        fs.mkdirSync(dirPath, { recursive: true });
+      }
+      const fileName = `user_${req.user.id}.${extension}`;
+      const filePath = path.join(dirPath, fileName);
+      fs.writeFileSync(filePath, buffer);
+      photoUrl = `/images/users/${fileName}`;
+    }
+  } else if (profile_photo === null || profile_photo === '') {
+    photoUrl = null;
+  } else if (profile_photo && !profile_photo.startsWith('data:image/')) {
+    photoUrl = profile_photo;
+  }
+
+  try {
+    db.prepare(`UPDATE users SET name = ?, email = ?, city = ?, country = ?, phone_number = ?, profile_photo = ? WHERE id = ?`)
+      .run(name, email.toLowerCase(), city || null, country || null, phone_number || null, photoUrl, req.user.id);
+  } catch (err) {
+    if (err.message.includes('UNIQUE constraint failed: users.email')) {
+      return res.status(409).json({ error: 'Email already in use by another account' });
+    }
+    return res.status(500).json({ error: 'Failed to update profile' });
+  }
+
+  const updated = db.prepare('SELECT id, name, email, profile_photo, city, country, phone_number, created_at FROM users WHERE id = ?').get(req.user.id);
+  res.json({ user: updated });
 });
 
 router.post('/forgot-password', (req, res) => {

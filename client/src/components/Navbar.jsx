@@ -26,8 +26,19 @@ export default function Navbar() {
             <Link className="btn-ghost btn" to="/trips/new" style={{ padding: '8px 12px' }}>New Trip</Link>
             <Link className="btn-ghost btn" to="/admin" style={{ padding: '8px 12px' }}>Admin</Link>
             <span style={{ width: 1, height: 22, background: 'var(--line)', margin: '0 6px' }} />
-            <span style={{ color: 'var(--muted)', fontSize: 13, marginRight: 4 }}>{user.name}</span>
-            <button className="btn btn-secondary" onClick={() => { logout(); navigate('/login'); }}>Log out</button>
+            
+            <Link to="/profile" style={{ display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'none', padding: '4px 8px', borderRadius: 6, transition: 'background 0.2s' }} className="btn-ghost">
+              {user.profile_photo ? (
+                <img src={user.profile_photo} alt={user.name} style={{ width: 24, height: 24, borderRadius: '50%', objectFit: 'cover' }} />
+              ) : (
+                <span style={{ width: 24, height: 24, borderRadius: '50%', background: 'var(--ocean)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 600 }}>
+                  {user.name.charAt(0).toUpperCase()}
+                </span>
+              )}
+              <span style={{ color: 'var(--muted)', fontSize: 13 }}>{user.name}</span>
+            </Link>
+
+            <button className="btn btn-secondary" style={{ marginLeft: 8 }} onClick={() => { logout(); navigate('/login'); }}>Log out</button>
           </nav>
         )}
       </div>

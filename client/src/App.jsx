@@ -10,6 +10,7 @@ import SharedTrip from './pages/SharedTrip';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 import AdminDashboard from './pages/AdminDashboard';
+import UserProfile from './pages/UserProfile';
 
 export default function App() {
   return (
@@ -22,6 +23,7 @@ export default function App() {
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/share/:slug" element={<SharedTrip />} />
         <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
+        <Route path="/profile" element={<ProtectedRoute><UserProfile /></ProtectedRoute>} />
         <Route path="/" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
         <Route path="/trips/new" element={<ProtectedRoute><CreateTrip /></ProtectedRoute>} />
         <Route path="/trips/:id" element={<ProtectedRoute><TripDetail /></ProtectedRoute>} />

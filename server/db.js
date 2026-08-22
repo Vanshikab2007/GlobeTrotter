@@ -31,6 +31,10 @@ CREATE TABLE IF NOT EXISTS users (
   name TEXT NOT NULL,
   email TEXT UNIQUE NOT NULL,
   password_hash TEXT NOT NULL,
+  profile_photo TEXT,
+  city TEXT,
+  country TEXT,
+  phone_number TEXT,
   created_at TEXT DEFAULT (datetime('now'))
 );
 
@@ -94,6 +98,10 @@ CREATE TABLE IF NOT EXISTS activities (
 try { db.exec('ALTER TABLE users ADD COLUMN reset_token TEXT;'); } catch (e) {}
 try { db.exec('ALTER TABLE users ADD COLUMN reset_token_expires TEXT;'); } catch (e) {}
 try { db.exec('ALTER TABLE trips ADD COLUMN budget_limit REAL;'); } catch (e) {}
+try { db.exec('ALTER TABLE users ADD COLUMN profile_photo TEXT;'); } catch (e) {}
+try { db.exec('ALTER TABLE users ADD COLUMN city TEXT;'); } catch (e) {}
+try { db.exec('ALTER TABLE users ADD COLUMN country TEXT;'); } catch (e) {}
+try { db.exec('ALTER TABLE users ADD COLUMN phone_number TEXT;'); } catch (e) {}
 
 // Seed reference data only once
 const cityCount = db.prepare('SELECT COUNT(*) as c FROM cities').get().c;
