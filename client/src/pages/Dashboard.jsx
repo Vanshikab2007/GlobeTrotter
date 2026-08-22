@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../lib/api';
 import TripCard from '../components/TripCard';
+import DropInImage from '../components/DropInImage';
 
 function groupTrips(trips) {
   const now = new Date();
@@ -73,10 +74,18 @@ export default function Dashboard() {
           </h2>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))', gap: 12 }}>
             {cities.map((c) => (
-              <div key={c.id} className="card" style={{ padding: 14 }}>
-                <p style={{ fontWeight: 600, fontSize: 14 }}>{c.name}</p>
-                <p style={{ color: 'var(--muted)', fontSize: 12, marginTop: 2 }}>{c.country}</p>
-                <p style={{ color: 'var(--muted-2)', fontSize: 12, marginTop: 8 }}>{c.blurb}</p>
+              <div key={c.id} className="card" style={{ padding: 0, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+                <DropInImage 
+                  folder="cities" 
+                  name={c.name} 
+                  style={{ width: '100%', height: 100, objectFit: 'cover' }}
+                  fallbackStyle={{ width: '100%', height: 60 }} 
+                />
+                <div style={{ padding: 14 }}>
+                  <p style={{ fontWeight: 600, fontSize: 14 }}>{c.name}</p>
+                  <p style={{ color: 'var(--muted)', fontSize: 12, marginTop: 2 }}>{c.country}</p>
+                  <p style={{ color: 'var(--muted-2)', fontSize: 12, marginTop: 8 }}>{c.blurb}</p>
+                </div>
               </div>
             ))}
           </div>

@@ -40,7 +40,10 @@ export default function Login() {
               onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" />
           </div>
           <div className="field">
-            <label htmlFor="password">Password</label>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+              <label htmlFor="password">Password</label>
+              <Link to="/forgot-password" style={{ color: 'var(--muted)', fontSize: 12, textDecoration: 'none' }}>Forgot password?</Link>
+            </div>
             <input className="input" id="password" type="password" required value={password}
               onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" />
           </div>

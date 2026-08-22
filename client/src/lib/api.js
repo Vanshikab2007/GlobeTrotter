@@ -28,6 +28,8 @@ export const api = {
   register: (payload) => request('/auth/register', { method: 'POST', body: payload }),
   login: (payload) => request('/auth/login', { method: 'POST', body: payload }),
   me: (token) => request('/auth/me', { token }),
+  forgotPassword: (email) => request('/auth/forgot-password', { body: { email } }),
+  resetPassword: (token, password) => request('/auth/reset-password', { body: { token, password } }),
 
   listTrips: (token) => request('/trips', { token }),
   createTrip: (token, payload) => request('/trips', { method: 'POST', body: payload, token }),

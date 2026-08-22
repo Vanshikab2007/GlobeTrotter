@@ -43,4 +43,47 @@ router.get('/me', requireAuth, (req, res) => {
   res.json({ user: row });
 });
 
+router.post('/forgot-password', (req, res) => {
+  const { email } = req.body || {};
+  if (!email) return res.status(400).json({ error: 'Email is required' });
+
+  const row = db.prepare('SELECT id FROM users WHERE email = ?').get(email.toLowerCase());
+  if (!row) {
+    // Return 200 even if not found to prevent email enumeration
+    return res.json({ ok: true, message: 'If an account exists, a reset link was generated.' });
+  }
+
+  // Generate a random token
+  import('crypto').then(crypto => {
+    const token = crypto.randomBytes(32).toString('hex');
+    const expires = new Date(Date.now() + 3600000).toISOString(); // 1 hour from now
+
+    db.prepare('UPDATE users SET reset_token = ?, reset_token_expires = ? WHERE id = ?')
+      .run(token, expires, row.id);
+
+    // In a real app, send an email here.
+    // For this demo, we'll return the token so the frontend can display it in a mock email UI.
+    res.json({ ok: true, resetToken: token });
+  });
+});
+
+router.post('/reset-password', (req, res) => {
+  const { token, password } = req.body || {};
+  if (!token || !password) return res.status(400).json({ error: 'Token and new password required' });
+  if (password.length < 6) return res.status(400).json({ error: 'Password must be at least 6 characters' });
+
+  const row = db.prepare('SELECT id, reset_token_expires FROM users WHERE reset_token = ?').get(token);
+  if (!row) return res.status(400).json({ error: 'Invalid or expired token' });
+
+  if (new Date(row.reset_token_expires) < new Date()) {
+    return res.status(400).json({ error: 'Token has expired' });
+  }
+
+  const password_hash = bcrypt.hashSync(password, 10);
+  db.prepare('UPDATE users SET password_hash = ?, reset_token = NULL, reset_token_expires = NULL WHERE id = ?')
+    .run(password_hash, row.id);
+
+  res.json({ ok: true });
+});
+
 export default router;

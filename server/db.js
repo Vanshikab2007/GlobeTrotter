@@ -90,6 +90,9 @@ CREATE TABLE IF NOT EXISTS activities (
 );
 `);
 
+try { db.exec('ALTER TABLE users ADD COLUMN reset_token TEXT;'); } catch (e) {}
+try { db.exec('ALTER TABLE users ADD COLUMN reset_token_expires TEXT;'); } catch (e) {}
+
 // Seed reference data only once
 const cityCount = db.prepare('SELECT COUNT(*) as c FROM cities').get().c;
 if (cityCount === 0) {
