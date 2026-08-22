@@ -334,12 +334,16 @@ function EditTripModal({ trip, token, onClose, onSaved }) {
   const [description, setDescription] = useState(trip.description || '');
   const [startDate, setStartDate] = useState(trip.start_date || '');
   const [endDate, setEndDate] = useState(trip.end_date || '');
+  const [budgetLimit, setBudgetLimit] = useState(trip.budget_limit || '');
   const [error, setError] = useState('');
 
   async function handleSubmit(e) {
     e.preventDefault();
     try {
-      const d = await api.updateTrip(token, trip.id, { name, description, start_date: startDate, end_date: endDate });
+      const d = await api.updateTrip(token, trip.id, { 
+        name, description, start_date: startDate, end_date: endDate, 
+        budget_limit: budgetLimit ? Number(budgetLimit) : null 
+      });
       onSaved(d.trip);
       onClose();
     } catch(err) {
@@ -363,6 +367,10 @@ function EditTripModal({ trip, token, onClose, onSaved }) {
             <label>End Date</label>
             <input type="date" className="input" required value={endDate} onChange={e=>setEndDate(e.target.value)} />
           </div>
+        </div>
+        <div className="field">
+          <label>Target Budget ($, optional)</label>
+          <input className="input" type="number" min="0" step="50" value={budgetLimit} onChange={e=>setBudgetLimit(e.target.value)} placeholder="e.g. 5000" />
         </div>
         <div className="field">
           <label>Description</label>

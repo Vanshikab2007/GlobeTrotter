@@ -24,9 +24,30 @@ export default function BudgetPanel({ tripId }) {
     <div style={{ display: 'grid', gridTemplateColumns: 'minmax(260px, 1fr) minmax(260px, 1fr)', gap: 24 }}>
       <div className="card" style={{ padding: 24 }}>
         <p style={{ color: 'var(--muted)', fontSize: 13, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Estimated total</p>
-        <h2 style={{ fontSize: 34, marginTop: 6, color: 'var(--sunset)' }}>${budget.total.toLocaleString()}</h2>
-        <p style={{ color: 'var(--muted-2)', fontSize: 12, marginTop: 8 }}>
-          Stay & transport are smart estimates based on each city's cost index until real bookings are added.
+        <h2 style={{ fontSize: 34, marginTop: 6, color: budget.limit && budget.total > budget.limit ? 'var(--danger, #ff4c4c)' : 'var(--sunset)' }}>
+          ${budget.total.toLocaleString()}
+          {budget.limit && <span style={{ fontSize: 18, color: 'var(--muted)', marginLeft: 8 }}>/ ${budget.limit.toLocaleString()}</span>}
+        </h2>
+        
+        {budget.limit && (
+          <div style={{ marginTop: 16 }}>
+            <div style={{ height: 8, background: 'var(--ink-900)', borderRadius: 4, overflow: 'hidden', border: '1px solid var(--line)' }}>
+              <div style={{ 
+                height: '100%', 
+                width: `${Math.min(100, (budget.total / budget.limit) * 100)}%`,
+                background: budget.total > budget.limit ? 'var(--danger, #ff4c4c)' : 'var(--ocean)' 
+              }} />
+            </div>
+            {budget.total > budget.limit && (
+              <p style={{ color: 'var(--danger, #ff4c4c)', fontSize: 12, marginTop: 6, fontWeight: 500 }}>
+                You are ${(budget.total - budget.limit).toLocaleString()} over budget.
+              </p>
+            )}
+          </div>
+        )}
+
+        <p style={{ color: 'var(--muted-2)', fontSize: 12, marginTop: 16 }}>
+          Stay & transport are smart estimates scaled by each city's cost of living index.
         </p>
 
         <div style={{ marginTop: 24, display: 'flex', flexDirection: 'column', gap: 10 }}>

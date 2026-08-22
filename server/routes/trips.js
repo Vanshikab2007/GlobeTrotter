@@ -39,14 +39,15 @@ function computeBudget(trip) {
       byCategory[a.category || 'Other'] = (byCategory[a.category || 'Other'] || 0) + (a.cost || 0);
     }
     
-    const costIdx = stop.cost_index || 1;
+    // cost_index is out of 100. Treat 50 as an average baseline.
+    const multiplier = (stop.cost_index || 50) / 50;
     
     if (stop.start_date && stop.end_date) {
       const nights = Math.max(1, Math.round((new Date(stop.end_date) - new Date(stop.start_date)) / 86400000));
       totalNights += nights;
-      estimatedStay += nights * 60 * costIdx;
+      estimatedStay += nights * 50 * multiplier; // Base stay is $50/night
     }
-    estimatedTransport += 50 * costIdx;
+    estimatedTransport += 100 * multiplier; // Base transport is $100/stop
   }
 
   const total = activitiesCost + estimatedStay + estimatedTransport;
@@ -60,6 +61,7 @@ function computeBudget(trip) {
     },
     byActivityCategory: byCategory,
     totalNights,
+    limit: trip.budget_limit || null,
   };
 }
 
@@ -86,14 +88,14 @@ router.get('/', requireAuth, (req, res) => {
 
 // POST /api/trips - create trip
 router.post('/', requireAuth, (req, res) => {
-  const { name, start_date, end_date, description, cover_photo } = req.body || {};
+  const { name, start_date, end_date, description, cover_photo, budget_limit } = req.body || {};
   if (!name) return res.status(400).json({ error: 'Trip name is required' });
   
   try { validateDates(start_date, end_date); } 
   catch(e) { return res.status(400).json({ error: e.message }); }
 
-  const info = db.prepare(`INSERT INTO trips (user_id, name, start_date, end_date, description, cover_photo)
-    VALUES (?, ?, ?, ?, ?, ?)`).run(req.user.id, name, start_date || null, end_date || null, description || null, cover_photo || null);
+  const info = db.prepare(`INSERT INTO trips (user_id, name, start_date, end_date, description, cover_photo, budget_limit)
+    VALUES (?, ?, ?, ?, ?, ?, ?)`).run(req.user.id, name, start_date || null, end_date || null, description || null, cover_photo || null, budget_limit || null);
   const trip = getTripWithDetail(info.lastInsertRowid);
   res.status(201).json({ trip });
 });
@@ -109,14 +111,14 @@ router.get('/:id', requireAuth, (req, res) => {
 router.put('/:id', requireAuth, (req, res) => {
   const trip = db.prepare('SELECT * FROM trips WHERE id = ?').get(req.params.id);
   if (!trip || trip.user_id !== req.user.id) return res.status(404).json({ error: 'Trip not found' });
-  const { name, start_date, end_date, description, cover_photo } = req.body || {};
+  const { name, start_date, end_date, description, cover_photo, budget_limit } = req.body || {};
   
   try { validateDates(start_date ?? trip.start_date, end_date ?? trip.end_date); } 
   catch(e) { return res.status(400).json({ error: e.message }); }
 
-  db.prepare(`UPDATE trips SET name = ?, start_date = ?, end_date = ?, description = ?, cover_photo = ? WHERE id = ?`)
+  db.prepare(`UPDATE trips SET name = ?, start_date = ?, end_date = ?, description = ?, cover_photo = ?, budget_limit = ? WHERE id = ?`)
     .run(name ?? trip.name, start_date ?? trip.start_date, end_date ?? trip.end_date,
-         description ?? trip.description, cover_photo ?? trip.cover_photo, trip.id);
+         description ?? trip.description, cover_photo ?? trip.cover_photo, budget_limit ?? trip.budget_limit, trip.id);
   res.json({ trip: getTripWithDetail(trip.id) });
 });
 

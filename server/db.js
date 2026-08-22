@@ -62,6 +62,7 @@ CREATE TABLE IF NOT EXISTS trips (
   end_date TEXT,
   description TEXT,
   cover_photo TEXT,
+  budget_limit REAL,
   is_public INTEGER DEFAULT 0,
   share_slug TEXT UNIQUE,
   created_at TEXT DEFAULT (datetime('now'))
@@ -92,6 +93,7 @@ CREATE TABLE IF NOT EXISTS activities (
 
 try { db.exec('ALTER TABLE users ADD COLUMN reset_token TEXT;'); } catch (e) {}
 try { db.exec('ALTER TABLE users ADD COLUMN reset_token_expires TEXT;'); } catch (e) {}
+try { db.exec('ALTER TABLE trips ADD COLUMN budget_limit REAL;'); } catch (e) {}
 
 // Seed reference data only once
 const cityCount = db.prepare('SELECT COUNT(*) as c FROM cities').get().c;

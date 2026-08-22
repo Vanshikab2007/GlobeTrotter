@@ -56,6 +56,11 @@ export default function CreateTrip() {
           </div>
         </div>
         <div className="field">
+          <label htmlFor="budget">Target Budget ($, optional)</label>
+          <input className="input" id="budget" type="number" min="0" step="50" value={form.budget_limit}
+            onChange={(e) => update('budget_limit', e.target.value)} placeholder="e.g. 5000" />
+        </div>
+        <div className="field">
           <label htmlFor="desc">Description (optional)</label>
           <textarea className="input" id="desc" rows={3} value={form.description}
             onChange={(e) => update('description', e.target.value)}
