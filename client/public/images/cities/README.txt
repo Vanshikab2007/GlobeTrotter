@@ -1,1 +1,6 @@
-To add an image for a city, simply drop a PNG or JPG file into this folder named exactly after the city (in lowercase, e.g., "paris.png" or "tokyo.jpg"). It will automatically appear on the dashboard!
+paris.jpeg
+bali.jpeg
+tokyo.jpeg
+newyork.jpeg
+london.jpeg
+rome.jpeg
